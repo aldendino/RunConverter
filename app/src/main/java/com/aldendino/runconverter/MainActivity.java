@@ -54,29 +54,46 @@ public class MainActivity extends AppCompatActivity {
                         + 100 * (secPicker.getValue()
                         + 60 * (minPicker.getValue()
                         + 60 * hrsPicker.getValue()));
-                double milPerKm = totalMil / getEditTextValue(kmText);
+                double kms = getEditTextValue(kmText);
 
-                double hrsPre = milPerKm / (100 * 60 * 60);
-                int hrs = (int) Math.floor(hrsPre);
-                hrsPre = (hrsPre - hrs) * (100 * 60 * 60);
+                if(kms != 0.0) {
+                    double milPerKm = totalMil / kms;
 
-                double minPre = hrsPre / (100 * 60);
-                int min = (int) Math.floor(minPre);
-                minPre = (minPre - min) * (100 * 60);
+                    double hrsPre = milPerKm / (100 * 60 * 60);
+                    int hrs = (int) Math.floor(hrsPre);
+                    hrsPre = (hrsPre - hrs) * (100 * 60 * 60);
 
-                double secPre = minPre / (100);
-                int sec = (int) Math.floor(secPre);
-                secPre = (secPre - sec) * (100);
+                    double minPre = hrsPre / (100 * 60);
+                    int min = (int) Math.floor(minPre);
+                    minPre = (minPre - min) * (100 * 60);
 
-                int mil = (int) Math.round(secPre);
+                    double secPre = minPre / (100);
+                    int sec = (int) Math.floor(secPre);
+                    secPre = (secPre - sec) * (100);
 
-                String hrsStr = zeroPad(hrs);
-                String minStr = zeroPad(min);
-                String secStr = zeroPad(sec);
-                String milStr = zeroPad(mil);
+                    int mil = (int) Math.round(secPre);
 
-                resultView.setText(String.format(Locale.CANADA,
-                        "%s:%s:%s:%s", hrsStr, minStr, secStr, milStr));
+                    if(mil > 99) {
+                        sec++;
+                        mil -= 100;
+                    }
+                    if(sec > 59) {
+                        min++;
+                        sec -= 60;
+                    }
+                    if(min > 59) {
+                        hrs++;
+                        min -= 60;
+                    }
+
+                    String hrsStr = zeroPad(hrs);
+                    String minStr = zeroPad(min);
+                    String secStr = zeroPad(sec);
+                    String milStr = zeroPad(mil);
+
+                    resultView.setText(String.format(Locale.CANADA,
+                            "%s:%s:%s:%s min/Km", hrsStr, minStr, secStr, milStr));
+                }
             }
         });
     }
